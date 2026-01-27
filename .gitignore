@@ -5,3 +5,5 @@ __pycache__
 .github
 apksigner/
 jadx/
+decompile-json/*
+decompile2

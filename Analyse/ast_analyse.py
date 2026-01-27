@@ -1,4 +1,4 @@
-import jast
+
 
 with open("../apksigner/sources/com/android/apksig/internal/apk/ApkSigningBlockUtils.java", "r") as file:
     tree = jast.parse(file.read())
