@@ -1,0 +1,13 @@
+**Class:** `com.android.apksig.internal.pkcs7.ContentInfo`
+
+| Aspect | Description |
+|--------|-------------|
+| **Main purpose / role** | Represents the ASN.1 *ContentInfo* structure defined in PKCS#7 (RFC 2315 / RFC 5652).  The class stores two key pieces of data: <br>1. `contentType` – the OID that identifies the type of content being signed (e.g., “1.2.840.113549.1.7.2” for a signed‑data block). <br>2. `content` – an opaque ASN.1 object (`Asn1OpaqueObject`) that contains the actual signed content or nested structure.  In the APK signing world, this object is used to model the signature blocks that appear in the *APK Signing Block* or the legacy V1 signature scheme. |
+| **Importance in the application** | **Core** – `ContentInfo` is a building block for the whole PKCS#7 parsing logic.  It is used by the APK signing utilities to decode the binary format of the signature block, extract the signed data, and ultimately verify the APK’s integrity.  Without this representation the library would have to work directly with raw ASN.1 streams, making the code harder to maintain. |
+| **Context and use case** | <ul><li>During APK signing or verification, the library reads the *APK Signing Block* (or the legacy V1 `META-INF` signatures).  The block is encoded as a PKCS#7 structure.  The parser first constructs a `ContentInfo` instance to capture the outermost `SignedData` object.</li><li>After parsing, other classes (e.g., `V1SchemeVerifier` or `ApkSigningBlockUtils`) query the `contentType` to decide which verification path to follow, and they feed the raw `content` into further ASN.1 parsers to obtain certificates, signer info, and the signed data hash.</li><li>Because `ContentInfo` is part of the `com.android.apksig.internal.pkcs7` package, it is an internal helper used exclusively by the signing library; end‑users of the public `apksig` API never see this class directly.</li></ul> |
+
+> **Inference / Assumptions**  
+> - The absence of methods suggests that this class is a simple data holder; parsing logic likely resides in a dedicated `Asn1Parser` or similar component.  
+> - The `in_degree` references (e.g., `ApkSigningBlockUtils.json`, `V1SchemeVerifier.json`) indicate that this class is *consumed* by higher‑level verification utilities rather than being the entry point of the library.  
+
+In short, `ContentInfo` is a lightweight, internal model of the PKCS#7 `ContentInfo` ASN.1 structure, essential for interpreting APK signature blocks but otherwise a support class that feeds into the core verification logic.

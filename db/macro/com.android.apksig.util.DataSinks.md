@@ -1,0 +1,15 @@
+**Class**: `com.android.apksig.util.DataSinks`
+
+| Topic | Explanation |
+|-------|-------------|
+| **Main purpose / role** | `DataSinks` is a *utility façade* that supplies factory methods for turning ordinary Java objects into objects that implement the `DataSink` or `ReadableDataSink` interfaces.  The class itself is abstract and has a private constructor, so it cannot be instantiated; all its behaviour is static.  The key responsibilities are:  <br>• Wrap an `OutputStream` into a `DataSink`.  <br>• Wrap a `RandomAccessFile` into a `DataSink`.  <br>• Wrap one or more `MessageDigest` objects into a `DataSink` that feeds data straight into the digests.  <br>• Provide an in‑memory implementation (`ReadableDataSink`) that can be written to and later read back (useful for temporary storage during verification or signing). |
+| **Importance in the application** | **Core supporting class**.  The APK signing engine relies on a small set of abstractions (`DataSink`, `ReadableDataSink`) to decouple the actual write/digest logic from the higher‑level signing algorithms.  `DataSinks` is the *bridge* that turns the raw I/O objects used by callers (streams, files, digests) into those abstractions.  Without it, each part of the signing pipeline would need its own conversion code, leading to duplication and harder maintenance.  It is heavily referenced by the four classes listed in the “in‑degree” (ApkSigner, DefaultApkSignerEngine, ApkSigningBlockUtils, V1SchemeVerifier), so it sits at the heart of the data‑flow logic. |
+| **Context and use case** | During APK signing or verification the library needs to: <br>1. **Write** the signature block to a file – `asDataSink(OutputStream)` or `asDataSink(RandomAccessFile)` is used.  <br>2. **Compute digests** over APK contents – `asDataSink(MessageDigest...)` feeds raw bytes straight into the digest algorithms.  <br>3. **Hold intermediate data** in RAM while assembling the signature block – `newInMemoryDataSink()` creates a `ReadableDataSink` that can be written to and later read for checksums or inclusion in the final block.  <br>In every case, the calling code interacts only with the `DataSink` interface, while `DataSinks` hides the concrete adapter implementation. |
+
+---
+
+### Quick summary
+
+- **What it does** – provides static factory helpers that convert common Java I/O and crypto objects into the library’s `DataSink` abstractions.  
+- **Why it matters** – centralizes and standardises how data is written or digested, enabling the rest of the signing code to stay agnostic of the underlying I/O mechanism.  
+- **Where it is used** – in the APK signing pipeline, whenever bytes must be written to a file, streamed, or fed into a digest.  It is a foundational building block for the signing utilities in the `com.android.apksig` package.

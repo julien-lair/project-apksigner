@@ -1,0 +1,12 @@
+**Class**: `com.android.apksig.internal.apk.v3.V3SchemeVerifier`
+
+| Topic | Answer |
+|-------|--------|
+| **Main purpose / role** | The class implements the logic required to verify an APK that has been signed with **APK Signing Scheme v3**. It exposes two public static `verify(...)` overloads that are called by the high‑level `ApkVerifier` to validate the integrity and authenticity of the APK. Internally it parses the v3 signing block, extracts each signer, validates the content digests and checks the RSA/ECDSA signatures against the certificates embedded in the block. |
+| **Importance in the application** | **Core**.  It is one of the fundamental pieces that enable the Android tooling to verify APK signatures.  Without it the entire signing‑verifier workflow would fail.  The class is also tightly coupled to the public `ApkVerifier` API and to the newer v4 scheme (`V4SchemeSigner`), which suggests it is part of the official signing‑verification stack shipped with the Android SDK. |
+| **Context and use case** | <ul><li>**When** the `ApkVerifier` class is invoked (e.g., `ApkVerifier.newBuilder().setMinSdkVersion(...).setMaxSdkVersion(...).build().verify(...)`), it first delegates to `V3SchemeVerifier.verify` if the APK contains a v3 signing block.  The verifier reads the ZIP sections of the APK, locates the signing block, and ensures that every referenced content digest matches the actual file data.  It also checks that the signatures are valid for the certificates in the block and that the certificates meet the minimum/maximum SDK constraints.</li><li>**Problem solved** – it guarantees that the APK has not been tampered with after being signed, and that the signatures were generated with a supported algorithm and key size.  This is essential for secure app delivery on Android devices.</li><li>**Fit into the overall program** – It is the low‑level engine behind the high‑level verification flow.  The high‑level API does not need to know how v3 signatures are encoded; it simply asks the verifier to check the APK.  This class also interacts with other internal helpers such as `ApkSigningBlockUtils`, `ApkUtils.ZipSections`, and `RunnablesExecutor` for parallel digest calculations.</li></ul> |
+
+### Quick Takeaway
+- **Purpose**: Validate APK Signing Scheme v3 signatures.  
+- **Criticality**: Core component of the APK verifier.  
+- **Usage**: Called by the public `ApkVerifier` API during verification; it parses the signing block, checks digests and signatures, and respects SDK‑version constraints.
