@@ -8,3 +8,4 @@ jadx/
 decompile-json/*
 decompile2
 decompile*
+.DS_store

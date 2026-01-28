@@ -1,5 +1,5 @@
 wget https://github.com/skylot/jadx/releases/download/v1.5.3/jadx-1.5.3.zip
- decompiler en json :  ./jadx apk.jar -d decompile-json --output-format json --cfg --deobf
+ decompiler en json :  ./jadx apk.jar -d decompile-json --output-format json --deobf
 
 
 
