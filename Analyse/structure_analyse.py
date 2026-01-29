@@ -45,7 +45,7 @@ def structure_analyse(staticData):
                 METHOD:
                 {method}
                 """
-                res = ""#call_agent_LLM(prompt,"deepseek-coder:6.7b")
+                res = call_agent_LLM(prompt,"deepseek-coder:6.7b")
                 pbar.update(1)
                 method["category"] = res.replace("\n","")
     return staticData
