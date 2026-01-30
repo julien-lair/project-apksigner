@@ -6,7 +6,6 @@ from Analyse.structure_analyse import structure_analyse
 from Analyse.deep_analyse import deep_analyse
 from Analyse.cryptographic_analyse import cryptographic_analyse
 from Analyse.vulnerability_analyse import vulnerability_analyse
-from Analyse.double_check import verification_doubleCheck
 from Analyse.synthese import synthese
 from tools.save import save_in_file, load_from_file
 DEBUG = True
@@ -26,7 +25,7 @@ if __name__ == "__main__":
     # save_in_file("crypto_analyse.json",json.dumps(cryptoAnalysys, indent=2))
     cryptoAnalysys = load_from_file("crypto_analyse.json")
 
-    vulnAnalysis = vulnerability_analyse(cryptoAnalysys)
-    save_in_file("vulnerability.json",json.dumps(cryptoAnalysys, indent=2))
+    #vulnAnalysis = vulnerability_analyse(cryptoAnalysys)
+    #save_in_file("vulnerability.json",json.dumps(cryptoAnalysys, indent=2))
 
     # synthese()
