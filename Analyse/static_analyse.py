@@ -4,7 +4,7 @@ def static_analysis(struct_json):
     Fonction qui analyse le programme de chaques strcutures du programmes passer en param 
     Exemple de contenue de struct_json[x] : {'json_path': 'decompile-json/sources/com/android/apksig/internal/util/FileChannelDataSource.json', 'coef': 0.41, 'nbr_degree_in' : 17}
     """
-    coefMin = 95 #ajuster ici pour sélectionner plus où moins de fichier a analyser (en %) 5 
+    coefMin = 5 #ajuster ici pour sélectionner plus où moins de fichier a analyser (en %) 5 
     resAnalysis = []
     for i in range(len(struct_json)):
         if struct_json[i]["coef"] >= coefMin:

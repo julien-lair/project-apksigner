@@ -39,3 +39,10 @@ pour les classes le splus susceptible d'être utile :
   nbr * coef = %
 - primtive cryptographique -> crypto : "" dans un json. -> IA wich algo (embeding pour rechecrher)
 - détceteur de vulnérabilité 
+
+
+curl -fsSL https://ollama.com/install.sh | sh
+pkill ollama
+# ollama serve
+ollama pull qwen3-vl:32b
+echo $OPEN_BUTTON_TOKEN

@@ -1,46 +1,10 @@
-**Class:** `com.android.apksig.internal.asn1.Asn1Type`  
-**Type:** `enum`
+Class Name: Asn1Type
 
----
+Main purpose/role:
+This class is an enumeration of different types that are used in the ASN.1 (Abstract Syntax Notation One) protocol, a way to encode data structures and types in a binary form as defined by ITU-T X.680 and ISO 7499. This enumeration defines various ASN.1 built-in classes including Universal, Application, Context Specific, Private, etc., which are used to identify the type of the data being encoded or decoded in an ASN.1 structure.
 
-### 1. Main purpose / role  
-`Asn1Type` is a simple enumeration that represents the primitive ASN.1 data types that can appear in the binary structures used by the APK‑signature subsystem.  The enum is likely defined something like:
+Importance in the application:
+The Asn1Type class is crucial for handling and interpreting data in its binary representation as defined by the ASN.1 protocol. It plays a pivotal role in ensuring that data can be accurately interpreted without any loss of information or correct functioning. This class forms the backbone of the ASN.1 processing done within the application, serving to encode and decode data structures in an ASN.1 compatible format.
 
-```java
-public enum Asn1Type {
-    INTEGER,
-    OCTET_STRING,
-    NULL,
-    OBJECT_IDENTIFIER,
-    SEQUENCE,
-    SET,
-    BOOLEAN,
-    // … other primitive / constructed types used by the library
-}
-```
-
-It does not contain fields or methods beyond the constants; its sole responsibility is to provide a type-safe way for the rest of the code to refer to ASN.1 element kinds when parsing or emitting binary data (e.g., BER/DER encoded structures in PKCS#7, X.509 certificates, etc.).
-
----
-
-### 2. Importance in the application  
-**Core/critical** – This enum is a building block for the low‑level ASN.1 parsing logic used by the APK‑signature verification and signing modules.  All higher‑level data‑model classes (e.g., `SignedData`, `Certificate`, `AlgorithmIdentifier`) depend on it to interpret the binary format.  If the enum were missing or incorrect, the entire parsing pipeline would fail.  Therefore, while it is tiny, it is essential to the correctness and stability of the library.
-
----
-
-### 3. Context and use case  
-* **Where it’s used:**  
-  * In `com.android.apksig.internal.asn1.ber.BerEncoding` and related classes that read/write BER/DER data.  
-  * In the JSON definitions that accompany the Java source (`.json` files in the in‑degree list), which likely map the enum values to the specific ASN.1 tag numbers used by the library.  
-  * Anywhere a parsed ASN.1 element is typed or a tag number is compared against a known type.
-
-* **What problem it solves:**  
-  It abstracts the numeric tag values of ASN.1 into readable constants, reducing magic numbers throughout the code.  It also enables the compiler to enforce that only valid ASN.1 types are referenced, helping prevent subtle bugs.
-
-* **How it fits into the overall program:**  
-  The APK signature verifier (`V1SchemeVerifier` and others) first reads raw bytes from an APK’s signature block, then passes those bytes to a BER decoder.  That decoder consults `Asn1Type` to determine how to parse each element, build the corresponding Java objects (`SignedData`, `Certificate`, etc.), and finally verify signatures.  Thus, `Asn1Type` sits at the very foundation of the binary‑parsing subsystem that guarantees the integrity of APK signatures.
-
----
-
-**Summary**  
-`Asn1Type` is a small, core enumeration that defines the set of ASN.1 primitive/constructed types understood by the APK‑signature library.  It provides a clean, type‑safe interface for the BER/DER parser, enabling reliable decoding of PKCS#7, X.509, and other structures that underpin APK signature verification and signing.
+Context and use case:
+This class is used extensively throughout the application to handle encoding and decoding of various types of data using the ASN.1 protocol. It's mainly utilized when dealing with digital signatures or certificates, which are often encoded using ASN.1 structures for efficiency and interoperability between different systems. As such, understanding the Asn1Type class can help to debug and resolve issues related to handling digital signature data in the application.

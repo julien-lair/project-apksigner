@@ -21,5 +21,5 @@ def macro_analyse(staticData, process = True):
         {data}
         """
         if process:
-            res = call_agent_LLM(prompt)
+            res = call_agent_LLM(prompt,"qwen3-vl:32b")
             save_in_file("macro/"+ data["signature"]["name"]+".md", res)

@@ -8,7 +8,7 @@ from Analyse.cryptographic_analyse import cryptographic_analyse
 from Analyse.vulnerability_analyse import vulnerability_analyse
 from Analyse.double_check import verification_doubleCheck
 from Analyse.synthese import synthese
-from tools.save import save_in_file
+from tools.save import save_in_file, load_from_file
 DEBUG = True
 import os, json
 if __name__ == "__main__":
@@ -19,9 +19,14 @@ if __name__ == "__main__":
     staticData = static_analysis(coreClass)
     save_in_file("staticData.json",json.dumps(staticData, indent=2))
     macro_analyse(staticData, not DEBUG)
-    methods_analysis = structure_analyse(staticData)
-    save_in_file("methods_analysis.json",json.dumps(methods_analysis, indent=2))
-    
-    # cryptographic_analyse()
-    # vulnerability_analyse()
+    methods_analysis = structure_analyse(staticData, not DEBUG)
+    # save_in_file("methods_analysis.json",json.dumps(methods_analysis, indent=2))
+    methods_analysis = load_from_file("methods_analysis.json")
+    cryptoAnalysys = cryptographic_analyse(methods_analysis, not DEBUG)
+    # save_in_file("crypto_analyse.json",json.dumps(cryptoAnalysys, indent=2))
+    cryptoAnalysys = load_from_file("crypto_analyse.json")
+
+    vulnAnalysis = vulnerability_analyse(cryptoAnalysys)
+    save_in_file("vulnerability.json",json.dumps(cryptoAnalysys, indent=2))
+
     # synthese()

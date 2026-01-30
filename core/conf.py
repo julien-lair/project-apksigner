@@ -1,4 +1,4 @@
-MODEL_LLM = "gpt-oss"
+MODEL_LLM = "qwen3-vl:32b"
 
 SYSTEM_PROMPT = """
 You are an expert in reverse engineering and code comprehension.
