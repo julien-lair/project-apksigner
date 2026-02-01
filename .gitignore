@@ -5,7 +5,6 @@ __pycache__
 .github
 apksigner/
 jadx/
-decompile-json/*
-decompile2
-decompile*
+decompile/*
 .DS_store
+.env

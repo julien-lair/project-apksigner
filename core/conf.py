@@ -1,7 +1,7 @@
-MODEL_LLM = "qwen3-vl:32b"
+JAR_FILE = "apksigner.jar"
+DEEP_ANALYSE = True
 
-SYSTEM_PROMPT = """
-You are an expert in reverse engineering and code comprehension.
-You will be given parts of a program, and I will ask questions regarding the role, importance, and context of a class.
-Provide high-level descriptions, assess criticality, and infer likely functionality when necessary.
-"""
+OLLAMA_API_URL = "localhost:11434/api/generate"
+OLLAMA_API_TOKEN = "token" # pour obtneir baerer token  sur vast.ai : echo $OPEN_BUTTON_TOKEN
+
+DEBUG = False

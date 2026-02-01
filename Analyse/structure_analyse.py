@@ -1,28 +1,22 @@
 from core.agent import call_agent_LLM
-from tools.save import save_in_file
 from tqdm import tqdm
-import time
 def structure_analyse(staticData, process=True):
-    print("je fais une analyse de la structure")
-    
-    allowed_categories = [
+    Category_methods = [
                 "cryptography",
                 "binary",
                 "io",
                 "network",
                 "utils",
                 "memory",
-                "math",
                 "parsing",
                 "system",
                 "unknown"
             ]
 
-    i = 1
     totalMethod = get_total_method(staticData)
-    with tqdm(total=totalMethod, desc="Analyse des méthodes", unit="method") as pbar:
+    with tqdm(total=totalMethod, desc="Analyse des méthodes", unit="Méthode") as pbar:
         for data in staticData:
-            context = get_context_of_class(data["signature"]["name"])
+            context = data["context"]
             for method in data["methods"]:
                 
                 prompt = f"""
@@ -32,7 +26,7 @@ def structure_analyse(staticData, process=True):
                 Classify the following method into EXACTLY ONE category.
 
                 CATEGORIES:
-                {allowed_categories}
+                {Category_methods}
 
                 RULES:
                 - Answer with ONE WORD ONLY
@@ -47,7 +41,6 @@ def structure_analyse(staticData, process=True):
                 METHOD:
                 {method}
 
-
                 Just one word please for the category.
                 """
                 if process:
@@ -60,14 +53,6 @@ def structure_analyse(staticData, process=True):
                 pbar.update(1)
                 
     return staticData
-
-def get_context_of_class(className):
-    path = "macro/"+ className+".md"
-    try:
-        with open(path, "r") as contextFile:
-            return contextFile.read()
-    except FileNotFoundError:
-        return "No context for this class"
 
 def get_total_method(data):
     res = 0

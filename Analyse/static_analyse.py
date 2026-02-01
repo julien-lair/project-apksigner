@@ -1,10 +1,12 @@
 import json
+from core.conf import DEEP_ANALYSE
 def static_analysis(struct_json):
     """
     Fonction qui analyse le programme de chaques strcutures du programmes passer en param 
-    Exemple de contenue de struct_json[x] : {'json_path': 'decompile-json/sources/com/android/apksig/internal/util/FileChannelDataSource.json', 'coef': 0.41, 'nbr_degree_in' : 17}
     """
-    coefMin = 5 #ajuster ici pour sélectionner plus où moins de fichier a analyser (en %) 5 
+    coefMin = 70
+    if DEEP_ANALYSE:
+        coefMin = 5 #ajuster ici pour sélectionner plus où moins de fichier a analyser (en %) 
     resAnalysis = []
     for i in range(len(struct_json)):
         if struct_json[i]["coef"] >= coefMin:
@@ -12,7 +14,7 @@ def static_analysis(struct_json):
             in_degree = struct_json[i]["nbr_degree_in"]
             res = static_analysis_file(jsonPath,in_degree)
             resAnalysis.append(res)
-    return  resAnalysis
+    return resAnalysis
 
 def static_analysis_file(path, in_degree = 0):
     fileContent = ""

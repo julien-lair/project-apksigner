@@ -1,40 +1,22 @@
 from tqdm import tqdm 
 import json
 from core.agent import call_agent_LLM
-from tools.save import save_in_file
 def cryptographic_analyse(jsonData, process=True):
-    print("je fais une analyse cryptographique")
+    
     totalCryptoMethod = get_total_crypto_method(jsonData)
 
-    with tqdm(total=totalCryptoMethod, desc="Analyse cryptographique", unit="method") as pbar:
+    with tqdm(total=totalCryptoMethod, desc="Analyse cryptographique", unit="Méthode") as pbar:
         for classes in jsonData:
 
             for method in classes["methods"]:
                 if method["category"] in ["cryptography","math"]:
-                    #nous avons une méthod de crypto
-                    """
-                     {
-                        "name": "computeChunkVerityTreeAndDigest",
-                        "return-type": "VerityTreeAndDigest",
-                        "arguments": [
-                        "DataSource"
-                        ],
-                        "declaration": "\npublic static VerityTreeAndDigest computeChunkVerityTreeAndDigest(DataSource dataSource) throws NoSuchAlgorithmException, IOException",
-                        "category": "cryptography"
-                    },
-      """
+                    #nous avons une méthode de crypto
                     code = ""
-                    """
-                    on calcul le path en plsueirus à cause de problème de nom de fihcier comme : 
-                    "name": "com.android.apksig.internal.apk.v1.V1SchemeVerifier",
-                    "package": "com.android.apksig.internal.apk.p000v1",
-
-                    le nom v1 n'est aps égal à p000v1
-
-                    """
-                    className = classes["signature"]["name"] #      "name": "com.android.apksig.internal.apk.ApkSigningBlockUtils",
+                    className = classes["signature"]["name"]
                     package = classes["signature"]["package"]
-                    path = "decompile-json/sources/" + "/" +package.replace(".","/") + "/" + className.split(".")[-1] +".json"
+                    path = "decompile/decompile-json/sources/" + "/" +package.replace(".","/") + "/" + className.split(".")[-1] +".json"
+                    
+                    #Récupère le code de la méthode
                     with open(path, "r") as classesJson:
                         fileContent = json.loads(classesJson.read())
                     if fileContent != "":
@@ -45,7 +27,7 @@ def cryptographic_analyse(jsonData, process=True):
                     if code != "":
                         #on a le code on peut lancer l'agent
                         prompt = """
-                        You are a security-focused assistant specialized in cryptography. Analyze the following Java method's code in detail to detect cryptographic issues or weaknesses.
+You are a security-focused assistant specialized in cryptography. Analyze the following Java method's code in detail to detect cryptographic issues or weaknesses.
 
 Task:
 1. Identify all cryptographic primitives used in this method. Include:
@@ -100,10 +82,10 @@ Method code to analyze:""" + str(code)
 
 
                         if process:
-                            res = call_agent_LLM(prompt,"qwen3:32b")
+                            res = call_agent_LLM(prompt,"qwen3:8b")
                             method["analyse_crypto"] = res
-                        pbar.update(1)
-                        
+
+                        pbar.update(1) 
     return jsonData
 
 

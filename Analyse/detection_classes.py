@@ -2,14 +2,14 @@ import json
 from igraph import Graph
 
 
-def detect_core_class(repertoire = "decompile-json"):
+def detect_core_class(repertoire = "decompile/decompile-json"):
     """    
     :param repertoire: répertoire des fichier décompiler avec jadx
 
-    listCoreClass créer un graph des imports de fonction entre chaques class, 
-    puis calcul les degrée de chaques noeud de graph pour déterminer les class centrale / coeur du système.
+    listCoreClass créer un graph des imports de fonction entre chaques classes, 
+    puis calcul les degrées de chaques noeud de graph pour déterminer les classes pertinentes / coeur du système.
     """
-    print("Détection des éléments coeur du système")
+    print("Recherche des classes pertinentes")
 
     g = Graph(directed=True)
     path = repertoire+"/sources/"
@@ -42,10 +42,8 @@ def detect_core_class(repertoire = "decompile-json"):
         degree_index.append((i,degree))
         if degree > max_degree:
             max_degree = degree
-
     #On trie les par rapport au degre > 0
     sorted_degree = sorted([x for x in degree_index if x[1] > 0], key=lambda x: x[1], reverse=True)
-
     coefImportance = 100 / max_degree
     classCore = []
     for i in sorted_degree:
@@ -62,8 +60,8 @@ def detect_core_class(repertoire = "decompile-json"):
             "nbr_degree_in" :NodeNameDegreeIn
         }
         classCore.append(data)
-
-
+    
+    
     return classCore
 
 def generated_import_graph(path, className, g : Graph):

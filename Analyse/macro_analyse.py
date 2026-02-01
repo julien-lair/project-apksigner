@@ -1,11 +1,10 @@
 from core.agent import call_agent_LLM
 from tools.save import save_in_file
 from tqdm import tqdm
+
 def macro_analyse(staticData, process = True):
-    print("je fait une analyse macro")
-    print(f"total apelle à éffectué: {len(staticData)}")
-    for data in tqdm(staticData, desc="Analyse macro", unit="class"):
-    
+    for data in tqdm(staticData, desc="Analyse macro", unit="classes"):
+
         prompt = f"""
         This is a Java program packaged as a .jar, and I want to better understand the overall application. Please help me by analyzing the classes I provide.
         For each class, answer the following:
@@ -22,4 +21,5 @@ def macro_analyse(staticData, process = True):
         """
         if process:
             res = call_agent_LLM(prompt,"qwen3-vl:32b")
-            save_in_file("macro/"+ data["signature"]["name"]+".md", res)
+            data["context"] = res
+    return staticData
